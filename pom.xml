@@ -1,37 +1,46 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>foo.sample</groupId>
-	<artifactId>sample-provider-parent</artifactId>
+	<groupId>foo.sample.maven.ci.friendly</groupId>
+	<artifactId>ci-friendly-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0.${revision}</version>
-	<description>This module is a parent for multimodule ci friendly releae managment on maven. 
-	It can be used  without flattening plugin if it's modules are not project as dependencies
-	In order to set version on jenkins run:
-	mvn clean install -Drevision=$BUILDNUMBER
+	<version>1.1.0.${revision}</version>
+	<description>This module is a parent for multi-module ci friendly release management with maven. 
+	It can be used without flattening plugin if it's modules are not used in other project dependencies.
+	Usage: mvn clean install scm:tag -Drevision=$BUILDNUMBER
 	</description>
 	<properties>
 		<!-- Sane default when no revision property is passed in from the command line -->
 		<revision>0-SNAPSHOT</revision>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<!--begin tags for by maven-scm-plugin -->
+		<!-- we use different names for tags and refs in order to avoid  refspec  matches more than one problem.-->
+		<tag>release-${project.version}</tag>
+		<branch>${project.version}</branch>
+		<!-- <pushChanges>false</pushChanges> uncomment if you don't want to push to git, e.g. when debugging your pipeline -->
+		<!--end tags for by maven-scm-plugin -->
 	</properties>
 
 	<modules>
-		<module>sample-provider-module1</module>
-		<module>sample-provider-module2</module>
+		<module>ci-friendly-module1</module>
+		<module>ci-friendly-module2</module>
 	</modules>
 
 	<scm>
-		<connection>scm:local:/home/yilativs/Dropbox/projects/git/sample/maven-multi-module-releasing-sample</connection>
+		<!-- <connection>scm:git:https://github.com/yilativs/maven-ci-friendly-multimodule-sample-project.git</connection> -->
+		<developerConnection>scm:git:ssh://git@github.com/yilativs/maven-ci-friendly-multimodule-sample-project.git</developerConnection>
+		<url>https://github.com/yilativs/maven-ci-friendly-multimodule-sample-project</url>
 	</scm>
 
 	<distributionManagement>
+		<!-- in order to use this, one must have nexus up and running on a given url -->
 		<repository>
-		    <!-- Snapshot repositories can be build on each commit to develop branch -->
+			<!-- Snapshot repositories can be build on each commit to develop branch -->
 			<id>sample-release-repository</id>
 			<url>http://127.0.0.1:8081/repository/maven-sample-release/</url>
 		</repository>
@@ -47,12 +56,11 @@
 			<plugin>
 				<groupId>org.codehause.mojo</groupId>
 				<artifactId>maven-scm-plugin</artifactId>
-				<version>2.5</version>
-				<configuration>
-					<tag>${project.artifactId}-${project.version}</tag>
+				<version>1.10.0</version>
+				<configuration><!-- TODO find out why it is ignored -->
+					<connectionType>developerConnection</connectionType>
 				</configuration>
 			</plugin>
-			<!-- 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
@@ -68,7 +76,7 @@
 							<goal>flatten</goal>
 						</goals>
 					</execution>
-					<execution>git 
+					<execution>
 						<id>flatten.clean</id>
 						<phase>clean</phase>
 						<goals>
@@ -77,7 +85,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			 -->
 		</plugins>
 	</build>
 </project>
