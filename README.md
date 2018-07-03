@@ -5,13 +5,13 @@ It can be used without flattening plugin if it's modules are not used in other p
 Usage: 
 
 ~~~~
-mvn clean install scm:tag -Drevision=$BUILD_NUMBER
+mvn clean deploy scm:tag -Drevision=$BUILD_NUMBER
 ~~~~
 
 or in case you want branch to be created together with tag
 
 ~~~~
-mvn clean install scm:tag scm:branch -Drevision=$BUILD_NUMBER
+mvn clean deploy scm:tag scm:branch -Drevision=$BUILD_NUMBER
 ~~~~
 
 

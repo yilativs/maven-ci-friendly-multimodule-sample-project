@@ -7,7 +7,7 @@
 	<version>1.1.0.${revision}</version>
 	<description>This module is a parent for multi-module ci friendly release management with maven. 
 	It can be used without flattening plugin if it's modules are not used in other project dependencies.
-	Usage: mvn clean install scm:tag -Drevision=$BUILDNUMBER
+	Usage: mvn clean deploy scm:tag -Drevision=$BUILD_NUMBER
 	</description>
 	<properties>
 		<!-- Sane default when no revision property is passed in from the command line -->
